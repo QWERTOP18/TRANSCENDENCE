@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
@@ -9,7 +9,7 @@ import {
   Matches,
 } from 'class-validator';
 
-class UserBaseBody {
+export class CreateUserBody {
   @ApiProperty({
     description: 'User email',
     example: 'test@example.com',
@@ -39,11 +39,21 @@ class UserBaseBody {
   @ApiProperty({
     description: 'User name',
     example: 'John Doe',
+    required: false,
   })
   @IsOptional()
   @IsString()
   @IsNotEmpty()
   name?: string;
+
+  @ApiProperty({
+    description: 'Image URL',
+    example: 'https://example.com/image.png',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  image?: string;
 }
 
-export class CreateUserBody extends UserBaseBody {}
+export class UpdateUserBody extends PartialType(CreateUserBody) {}

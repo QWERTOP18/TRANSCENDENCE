@@ -19,7 +19,7 @@ Prisma（プリズマ）は、TypeScript/JavaScript 向けの ORM（Object-Relat
 migrate方法
 
 ```sh
-npx prisma migrate dev
+npx prisma migrate dev --name hoge
 ```
 
 databaseに接続できているか確認するようのエンドポイントを追加した`api/v1/test-db`
@@ -47,3 +47,18 @@ app.useGlobalPipes(
   })
 );
 ```
+
+## ルートのマッチング順序
+
+例えば、以下のようなルート定義があった場合
+
+```ts
+@Get(':id')
+@Get('search')
+```
+
+このとき、リクエスト /search?query=foo は
+
+まず :id の動的ルートにマッチしようとし、
+
+:id = 'search' と解釈されてしまう！！！

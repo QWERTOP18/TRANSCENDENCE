@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY api-v1 .
 
-RUN npm install
+RUN npm install && npx prisma generate
 
 ENV NODE_ENV=development
 
