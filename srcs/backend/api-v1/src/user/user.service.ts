@@ -16,31 +16,41 @@ export class UserService extends BaseService {
   }
 
   async getUsers() {
-    this.logger.log('getUsers');
-    return this.prisma.user.findMany();
+    try {
+      this.logger.log('getUsers');
+      return await this.prisma.user.findMany();
+    } catch (error) {
+      this.logger.error('Failed to fetch users', error.stack);
+      throw error;
+    }
   }
 
   async createUser(user: CreateUserBody) {
-    this.logger.log('createUser');
-    const existingUser = await this.prisma.user.findUnique({
-      where: { email: user.email },
-    });
-    if (existingUser) {
-      throw new BadRequestException('User already exists');
+    try {
+      this.logger.log('createUser');
+      const existingUser = await this.prisma.user.findUnique({
+        where: { email: user.email },
+      });
+      if (existingUser) {
+        throw new BadRequestException('User already exists');
+      }
+      if (user.image) {
+        const imageUrl = await this.uploadImage(user.image);
+        user.image = imageUrl;
+      } else {
+        user.image = process.env.DEFAULT_IMAGE_URL;
+      }
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+      return await this.prisma.user.create({
+        data: {
+          ...user,
+          password: hashedPassword,
+        },
+      });
+    } catch (error) {
+      this.logger.error('Failed to create user', error.stack);
+      throw error;
     }
-    if (user.image) {
-      const imageUrl = await this.uploadImage(user.image);
-      user.image = imageUrl;
-    } else {
-      user.image = process.env.DEFAULT_IMAGE_URL;
-    }
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    return this.prisma.user.create({
-      data: {
-        ...user,
-        password: hashedPassword,
-      },
-    });
   }
 
   async getUser(id: string) {
