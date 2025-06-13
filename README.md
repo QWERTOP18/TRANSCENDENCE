@@ -15,3 +15,9 @@ visit🏃‍♀️ http://localhost:3001/api/v1/docs
 [document](https://docs.nestjs.com/recipes/prisma)
 
 Prisma（プリズマ）は、TypeScript/JavaScript 向けの ORM（Object-Relational Mapping）ツールです。データベースとアプリケーションコードの橋渡しをしてくれるもので、SQLを書かずにデータベース操作を行えるようになります。
+
+migrate方法
+
+```sh
+npx prisma migrate dev
+```
