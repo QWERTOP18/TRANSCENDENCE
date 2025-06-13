@@ -21,7 +21,9 @@ services:
       - ft-network
     ports:
       - 3001:3001
-    restart: always
+    env_file:
+      - ./backend/api-v1/.env
+    # restart: always
 
 volumes:
   front:

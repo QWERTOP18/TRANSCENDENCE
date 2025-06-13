@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY api-v1 .
 
-RUN npm install && npm run build
+RUN npm install && npm run build && npx prisma generate
 
 CMD npm run start
