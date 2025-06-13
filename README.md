@@ -32,3 +32,18 @@ last update 06/13
 http://localhost:5601/　にアクセスした後データの見方がわからなかった。
 
 NestJSの方では、loggerディレクトリを作成してapp-controllerにメンバーとして渡したが、serviceを作るときは毎回メンバーとして渡さないといけないので、抽象クラスを作った方が良さそう？
+
+## DTO
+
+middlewareでvalidationしなくてもvalidationPipeを使用すると自動的にやってくれる。便利ｽｷﾞﾙﾈΣ੧(❛□❛✿)
+
+```ts
+// main.ts
+app.useGlobalPipes(
+  new ValidationPipe({
+    whitelist: true, // DTOにないプロパティを削除
+    forbidNonWhitelisted: true, // DTOにないプロパティがあると400エラー
+    transform: true, // 自動でDTO型に変換
+  })
+);
+```

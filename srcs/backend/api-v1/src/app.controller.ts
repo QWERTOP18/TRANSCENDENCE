@@ -2,14 +2,17 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { PrismaService } from './prisma.service';
 import { CustomLoggerService } from './logger/logger.service';
+import { BaseController } from './common/base.controller';
 
 @Controller()
-export class AppController {
+export class AppController extends BaseController {
   constructor(
     private readonly appService: AppService,
-    private readonly prisma: PrismaService,
-    private readonly logger: CustomLoggerService,
-  ) {}
+    prisma: PrismaService,
+    logger: CustomLoggerService,
+  ) {
+    super(prisma, logger);
+  }
 
   @Get()
   getHello(): string {
