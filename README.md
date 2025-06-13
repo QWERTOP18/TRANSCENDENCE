@@ -21,3 +21,14 @@ migrate方法
 ```sh
 npx prisma migrate dev
 ```
+
+databaseに接続できているか確認するようのエンドポイントを追加した`api/v1/test-db`
+
+## ELK stack
+
+last update 06/13
+
+とりあえずdocker-composeにそれぞれのサービスをかいて動くようにしたが、、、
+http://localhost:5601/　にアクセスした後データの見方がわからなかった。
+
+NestJSの方では、loggerディレクトリを作成してapp-controllerにメンバーとして渡したが、serviceを作るときは毎回メンバーとして渡さないといけないので、抽象クラスを作った方が良さそう？
