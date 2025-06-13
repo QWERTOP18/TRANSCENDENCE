@@ -1,9 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConsoleLogger } from '@nestjs/common';
+import { CustomLoggerService } from './logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const logger = app.get(CustomLoggerService);
+  app.useLogger(logger);
 
   const config = new DocumentBuilder()
     .setTitle('Transcendence API')
@@ -17,7 +21,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/v1/docs', app, documentFactory);
 
   await app.listen(process.env.PORT ?? 3001, () => {
-    console.log(`Server is running on port ${process.env.PORT ?? 3001}`);
+    logger.log(`Server is running on port ${process.env.PORT ?? 3001}`);
   });
 }
 bootstrap();
