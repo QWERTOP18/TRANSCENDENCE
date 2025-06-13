@@ -6,4 +6,6 @@ COPY api-v1 .
 
 RUN npm install && npm run build && npx prisma generate
 
-CMD npm run start
+ENV NODE_ENV=production
+
+CMD npm run start:prod

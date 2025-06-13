@@ -1,0 +1,77 @@
+services:
+  # front:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   image: frontend_prod:local
+  #   volumes:
+  #     - front:/app/build
+  #   networks:
+  #     - ft-network
+  #   init: true
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    image: backend_prod:local
+    volumes:
+      - ./backend/api-v1:/app/api-v1
+    networks:
+      - ft-network
+    ports:
+      - 3001:3001
+    env_file:
+      - ./backend/api-v1/.env
+
+    # depends_on:
+    #   - logstash
+    #   - elasticsearch
+    #   - kibana
+    # restart: always
+
+  # ELK stack
+
+  # logstash:
+  #   image: docker.elastic.co/logstash/logstash:8.12.1
+  #   volumes:
+  #     - ./logstash/pipeline:/usr/share/logstash/pipeline
+  #   ports:
+  #     - "5100:5100"
+  #   networks:
+  #     - ft-network
+  #   environment:
+  #     LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+  #     LOG_LEVEL: "warn"
+  #   depends_on:
+  #     - elasticsearch
+
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
+  #   environment:
+  #     - discovery.type=single-node
+  #     - xpack.security.enabled=false
+  #     - logger.org.elasticsearch=warn
+  #   ports:
+  #     - "9200:9200"
+  #   networks:
+  #     - ft-network
+  #   volumes:
+  #     - esdata:/usr/share/elasticsearch/data
+
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:8.12.1
+  #   ports:
+  #     - "5601:5601"
+  #   networks:
+  #     - ft-network
+  #   depends_on:
+  #     - elasticsearch
+
+volumes:
+  front:
+  backend:
+  # esdata:
+
+networks:
+  ft-network:

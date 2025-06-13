@@ -5,9 +5,11 @@ import * as http from 'http';
 export class CustomLoggerService implements LoggerService {
   private context?: string;
   private readonly logstashUrl: string;
+  private readonly isDevelopment: boolean;
 
   constructor() {
     this.logstashUrl = 'http://logstash:5100';
+    this.isDevelopment = process.env.NODE_ENV === 'development';
   }
 
   setContext(context: string) {
@@ -15,6 +17,10 @@ export class CustomLoggerService implements LoggerService {
   }
 
   private async sendToLogstash(level: string, message: string, meta?: any) {
+    if (this.isDevelopment) {
+      return;
+    }
+
     const logEntry = {
       timestamp: new Date().toISOString(),
       level,

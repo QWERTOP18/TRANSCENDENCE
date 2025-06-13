@@ -1,0 +1,11 @@
+FROM node:18
+
+WORKDIR /app
+
+COPY api-v1 .
+
+RUN npm install && npx prisma generate
+
+ENV NODE_ENV=development
+
+CMD npm run start:dev 
