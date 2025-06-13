@@ -1,0 +1,31 @@
+services:
+  # front:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   image: frontend_prod:local
+  #   volumes:
+  #     - front:/app/build
+  #   networks:
+  #     - ft-network
+  #   init: true
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: backend_prod:local
+    volumes:
+      - ./backend/api-v1:/app/api-v1
+    networks:
+      - ft-network
+    ports:
+      - 3001:3001
+    restart: always
+
+volumes:
+  front:
+  backend:
+
+networks:
+  ft-network:
