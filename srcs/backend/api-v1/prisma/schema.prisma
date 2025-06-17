@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +7,84 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @default(autoincrement()) @id
-  email String  @unique
-  name  String?
+model Auth {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
   password String
-  image String?
-//  posts Post[]
+  user     User   @relation(fields: [userId], references: [id])
+  userId   Int　@unique
 }
 
-//model Post {
-//  id        Int      @default(autoincrement()) @id
-//  title     String
-//  content   String?
-//  published Boolean? @default(false)
-//  author    User?    @relation(fields: [authorId], references: [id])
-//  authorId  Int?
-//}
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  name     String @default("user")
+  image    String?
+
+  auth     Auth?
+
+  tournamentsCreated Tournament[] @relation("CreatedTournaments")
+
+  participants Participant[]
+
+  matchesAsPlayer1 Match[] @relation("Player1")
+  matchesAsPlayer2 Match[] @relation("Player2")
+  matchesAsWinner  Match[] @relation("Winner")
+
+  statsAsWinner Stats[] @relation("WinRelation")
+  statsAsLoser  Stats[] @relation("LoseRelation")
+}
+
+model Tournament {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  startedAt   DateTime
+  createdBy   User   @relation("CreatedTournaments", fields: [createdById], references: [id])
+  createdById Int
+
+  participants Participant[]
+  matches     Match[]
+  stats       Stats[]
+}
+
+
+model Participant {
+  id           Int    @id @default(autoincrement())
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  tournamentId Int
+  user         User       @relation(fields: [userId], references: [id])
+  userId       Int
+}
+
+model Match {
+  id           Int    @id @default(autoincrement())
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  tournamentId Int
+  round        Int
+  matchNumber  Int
+
+  player1      User   @relation("Player1", fields: [player1Id], references: [id])
+  player1Id    Int
+  player2      User   @relation("Player2", fields: [player2Id], references: [id])
+  player2Id    Int
+  winner       User?  @relation("Winner", fields: [winnerId], references: [id])
+  winnerId     Int?
+
+  status       String @default("scheduled") // scheduled, playing, finished
+}
+
+model Stats {
+  id         Int    @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  tournament Tournament @relation(fields: [tournamentId], references: [id])
+  tournamentId Int
+
+  win        User   @relation("WinRelation", fields: [winnerId], references: [id])
+  winnerId   Int
+  lose       User   @relation("LoseRelation", fields: [loserId], references: [id])
+  loserId    Int
+
+  winPoint   Int
+  losePoint  Int
+}
