@@ -7,13 +7,14 @@ import { BaseService } from '../common/base.service';
 import { PrismaService } from '../prisma.service';
 import { CustomLoggerService } from '../logger/logger.service';
 import { CreateUserBody, UpdateUserBody } from './user.dto';
-import * as bcrypt from 'bcrypt';
+// import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UserService extends BaseService {
-  constructor(prisma: PrismaService, logger: CustomLoggerService) {
-    super(prisma, logger);
-  }
+export class UserService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly logger: CustomLoggerService,
+  ) {}
 
   async getUsers() {
     try {
@@ -40,13 +41,13 @@ export class UserService extends BaseService {
       } else {
         user.image = process.env.DEFAULT_IMAGE_URL;
       }
-      const hashedPassword = await bcrypt.hash(user.password, 10);
-      return await this.prisma.user.create({
-        data: {
-          ...user,
-          password: hashedPassword,
-        },
-      });
+      // const hashedPassword = await bcrypt.hash(user.password, 10);
+      // return await this.prisma.user.create({
+      //   data: {
+      //     ...user,
+      //     password: hashedPassword,
+      //   },
+      // });
     } catch (error) {
       this.logger.error('Failed to create user', error.stack);
       throw error;

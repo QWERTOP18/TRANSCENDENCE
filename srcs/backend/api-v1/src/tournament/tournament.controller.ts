@@ -1,9 +1,13 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { TournamentService } from './tournament.service';
 import { PrismaService } from 'src/prisma.service';
 import { CustomLoggerService } from 'src/logger/logger.service';
 import { BaseController } from 'src/common/base.controller';
-import { createTournamentBody } from './tournament.dto';
+import {
+  AddParticipantDto,
+  CreateTournamentDto,
+  UpdateTournamentDto,
+} from './tournament.dto';
 
 @Controller('tournament')
 export class TournamentController extends BaseController {
@@ -20,8 +24,26 @@ export class TournamentController extends BaseController {
     return this.tournamentService.getTournaments();
   }
 
-  @Post()
-  async createTournament(@Body() tournamentData: createTournamentBody) {
+  @Get(':id')
+  async getTournament(@Param('id') id: string) {
+    return this.tournamentService.getTournament(id);
+  }
+
+  @Post('create')
+  async createTournament(@Body() tournamentData: CreateTournamentDto) {
     return this.tournamentService.createTournament(tournamentData);
+  }
+
+  @Post('add-participant')
+  async addParticipant(@Body() participantData: AddParticipantDto) {
+    return this.tournamentService.addParticipantToTournament(participantData);
+  }
+
+  @Patch(':id')
+  async updateTournament(
+    @Param('id') id: string,
+    @Body() tournamentData: UpdateTournamentDto,
+  ) {
+    return this.tournamentService.updateTournament(id, tournamentData);
   }
 }

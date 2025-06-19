@@ -16,14 +16,8 @@ import { CreateUserBody, UpdateUserBody } from './user.dto';
 
 @ApiTags('users')
 @Controller('user')
-export class UserController extends BaseController {
-  constructor(
-    private readonly userService: UserService,
-    prisma: PrismaService,
-    logger: CustomLoggerService,
-  ) {
-    super(prisma, logger);
-  }
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all users' })

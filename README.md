@@ -62,3 +62,21 @@ app.useGlobalPipes(
 まず :id の動的ルートにマッチしようとし、
 
 :id = 'search' と解釈されてしまう！！！
+
+## Nest.js test
+
+```ts
+// *.spec.ts
+const mockPrismaService = {
+  user: {
+    findMany: jest.fn(),
+    create: jest.fn(),
+    findUnique: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  },
+};
+```
+
+こういうのは共通しているから括り出せそう。書き慣れていないからかとても読みにくい。
+CLIユーザーでのテストも早く追加したい。

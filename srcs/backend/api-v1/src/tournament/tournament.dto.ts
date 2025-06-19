@@ -23,8 +23,3 @@ export class CreateMatchDto {
   player1Id: number;
   player2Id: number;
 }
-
-export class UpdateMatchResultDto {
-  matchId: number;
-  winnerId: number;
-}
